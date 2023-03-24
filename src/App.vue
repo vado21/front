@@ -1,20 +1,20 @@
 <template>
 <v-app>
     <navigation-bar/>
-    <v-content>
-          <router-view/>
-        </v-content>
+    <router-view/>
   </v-app>
 </template>
 
 <script>
 import navigationBar from './components/navigationBar';
+import homeView from './views/HomeView.vue';
 
 export default {
   name: 'App',
 
   components: {
-    navigationBar
+    navigationBar,
+    homeView
   },
 
   data: () => ({
