@@ -134,8 +134,7 @@
           }
         },
         async created(){
-          // this.pedidos = await ReservationService.list()
-          let idCompany = this.$route.query.id
+          let idCompany = this.$route.params.id
            this.$http.get("http://localhost:7000/api/review/company/"+idCompany)
             .then((result) => {
               this.resenas = result.body
