@@ -11,20 +11,19 @@
       <v-spacer></v-spacer>
       <div class="area">
       <v-autocomplete
-        v-model="model"
+        v-model="company"
         :items="items"
-        :loading="isLoading"
+        item-text="companyName"
+        item-value="id"
         :search-input.sync="search"
+        :loading="isLoading"
         color="white"
         solo
         hide-no-data
         hide-selected
-        item-text="Description"
-        item-value="telltell API"
         label="Busca una empresa"
         placeholder="Start typing to Search"
         prepend-icon="mdi-city"
-        return-object
       ></v-autocomplete>
       </div>
       <div class="avatar">
@@ -44,20 +43,23 @@
       descriptionLimit: 60,
       entries: [],
       isLoading: false,
-      model: null,
       search: null,
-      items: ['BBVA','SIGMA']
+      items: [],
+      company:""
     }),
+    async created (){
+      this.$http.get("http://localhost:7000/api/company")
+            .then((result) => {
+              this.items = result.body
+             })
+            .catch((error) => {
+              
+            });
+    },
     watch: {
-      model(val,oldval){
-        if(val == 'BBVA'){
-          window.location.href = "http://localhost:8080/#/review?id=2";
-          window.location.reload();
-        }
-        else if(val == 'SIGMA'){
-          window.location.href = "http://localhost:8080/#/review?id=1";
-          window.location.reload();
-        }
+      company(val){
+        let url = "/review/"+val
+        this.$router.push(url);
       }
     }
   }
