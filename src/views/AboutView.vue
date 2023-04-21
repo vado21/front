@@ -47,6 +47,7 @@
     <v-btn
       class="ma-2"
       color="primary"
+      @click="goToCreate()"
     >
       + Cuentanos tu experiencia
     </v-btn>
@@ -157,7 +158,10 @@
          
         },
     methods: {
-
+      goToCreate(){
+        let history = "/create/" + this.$route.query.id
+        this.$router.push(history);
+      }
     }
 
   }
