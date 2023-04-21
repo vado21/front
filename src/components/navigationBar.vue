@@ -60,6 +60,7 @@
       company(val){
         let url = "/review/"+val
         this.$router.push(url);
+        location.reload();
       }
     }
   }

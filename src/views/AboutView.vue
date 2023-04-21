@@ -159,7 +159,7 @@
         },
     methods: {
       goToCreate(){
-        let history = "/create/" + this.$route.query.id
+        let history = "/create/" + this.$route.params.id
         this.$router.push(history);
       }
     }

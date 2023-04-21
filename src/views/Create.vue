@@ -152,7 +152,7 @@
                     };
           this.$http.post("http://localhost:7000/api/review",body)
           .then((result) => {
-            let history = "/review?id=" + idCompany
+            let history = "/review/" + idCompany
             this.$router.push(history);
           })
           .catch((error) => {
