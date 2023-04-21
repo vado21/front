@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bar">
     <v-app-bar
       color="white"
       absolute
@@ -75,5 +75,8 @@
   }
   .navbar {
     margin-bottom: 10%;
+  }
+  .bar{
+    height: 5vh;
   }
 </style>
