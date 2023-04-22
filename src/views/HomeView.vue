@@ -41,7 +41,7 @@
   .welcome {
     margin-top: 5vh;
     color: #2282F0;
-    font-size: 35px;
+    font-size: 25px;
     height: 15vh;
     padding: 25px;
     
@@ -49,23 +49,23 @@
   .blue{
     background-color: #2282F0 ;
     color: white;
-    font-size: 35px;
+    font-size: 30px;
     height: 25vh;
   }
   .icon{
-    width:35%;
-    height: 55%;
+    width:30%;
+    height: 50%;
   }
   .white{
     background-color: white ;
     color: #2282F0 ;
-    font-size: 35px;
+    font-size: 30px;
     height: 25vh;
   }
   .bluesecond{
     background-color: #2282F0 ;
     color: white;
-    font-size: 35px;
+    font-size: 30px;
     height: 30vh;
   }
 </style>
