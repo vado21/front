@@ -112,7 +112,6 @@
         <v-btn
           color="deep-purple lighten-2"
           text
-          @click="reserve"
         >
           Reportar
         </v-btn>
@@ -149,7 +148,7 @@
       </v-row>
       <v-row>
         <v-col class="text-left">
-          Sitio Web: {{siteWeb}}
+          Link : {{siteWeb}}
         </v-col>
         <v-col class="text-left">
          Telefono: {{phone}}
@@ -262,7 +261,7 @@
               this.zipCode = result.body.zipCode 
              })
             .catch((error) => {
-              
+              console.log(error)
             });
         },
     methods: {
