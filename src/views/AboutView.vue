@@ -7,8 +7,8 @@
         <img :src="imgUrl" width="150" height="100" >
       
         <div class="">
-        <p style="font-size:30px; font:Inter">{{nombre}}</p>
-        <p style="font-size:20px; font:Inter">{{razon}}</p>
+        <p style="font-size:30px; font:Inter">{{name}}</p>
+        <p style="font-size:20px; font:Inter">{{reason}}</p>
         </div>
     </div>
 
@@ -21,12 +21,12 @@
     >
       <v-tabs-slider></v-tabs-slider>
 
-      <v-tab href="#tab-1">
+      <v-tab href="#tab-1" @click="goToInfo()" >
         Informacion General
         <v-icon>mdi-book</v-icon>
       </v-tab>
 
-      <v-tab href="#tab-2">
+      <v-tab href="#tab-2" @click="goToReviews()">
         Reseñas
         <v-icon>mdi-star</v-icon>
       </v-tab>
@@ -52,70 +52,155 @@
       + Cuentanos tu experiencia
     </v-btn>
     </div>
-<div style="padding:20px" v-for="resena in resenas" v-bind:key="resena.title">
+    <div v-show="showReview">
+    <div style="padding:20px" v-for="resena in resenas" v-bind:key="resena.title">
 
-    <v-card
-    class="mx-auto"
-    max-width="700"
-    
-    color="#F9F9F9"
-  > <v-list-item three-line>
-      <v-list-item-content>
-        <v-row justify="left">
-          <v-col>
-        <div class="text-h6 mb-1">
-          {{resena.title}}
-        </div>
-        </v-col>
-        <v-col>
-         <v-rating
-            v-model="resena.rating"
-            bg-color="orange-lighten-1"
-            color="blue"
-            readonly
-          ></v-rating>
-          </v-col>
-        </v-row>
-        <v-list-item-title  class="text-overline mb-4">
-          <p class="text-left">
-            {{resena.createdAt}} &nbsp &nbsp &nbsp
-            Empleo: {{resena.reviewerOccupation}}
-          </p>
-        </v-list-item-title>
-          <div>
-          <p class="text-left">{{resena.body}}</p>
+      <v-card
+      class="mx-auto"
+      max-width="700"
+      
+      color="#F9F9F9"
+    > <v-list-item three-line>
+        <v-list-item-content>
+          <v-row justify="left">
+            <v-col>
+          <div class="text-h6 mb-1">
+            {{resena.title}}
           </div>
-         <div >
-        <h4 class="text-left">¿Que mejoraria?</h4>
-        </div>
-        <br>
-        <div>
-          <p  class="text-left" >{{resena.footer}}</p>
-        </div>
-      </v-list-item-content>
-    </v-list-item>
-   <v-card-text>
-      <v-chip-group
-        v-model="selection"
-        active-class="blue accent-4 white--text"
-        column
-      >
-        <v-chip>Me gusta</v-chip>
+          </v-col>
+          <v-col>
+          <v-rating
+              v-model="resena.rating"
+              bg-color="orange-lighten-1"
+              color="blue"
+              readonly
+            ></v-rating>
+            </v-col>
+          </v-row>
+          <v-list-item-title  class="text-overline mb-4">
+            <p class="text-left">
+              {{resena.createdAt}} &nbsp &nbsp &nbsp
+              Empleo: {{resena.reviewerOccupation}}
+            </p>
+          </v-list-item-title>
+            <div>
+            <p class="text-left">{{resena.body}}</p>
+            </div>
+          <div >
+          <h4 class="text-left">¿Que mejoraria?</h4>
+          </div>
+          <br>
+          <div>
+            <p  class="text-left" >{{resena.footer}}</p>
+          </div>
+        </v-list-item-content>
+      </v-list-item>
+    <v-card-text>
+        <v-chip-group
+          v-model="selection"
+          active-class="blue accent-4 white--text"
+          column
+        >
+          <v-chip>Me gusta</v-chip>
 
-        <v-chip>No me gusta</v-chip>
+          <v-chip>No me gusta</v-chip>
 
-        <v-chip>Compartir</v-chip>
-      </v-chip-group>
-    </v-card-text>
-    <v-card-actions>
-      <v-btn
-        color="deep-purple lighten-2"
-        text
-        @click="reserve"
-      >
-        Reportar
-      </v-btn>
-    </v-card-actions>
+          <v-chip>Compartir</v-chip>
+        </v-chip-group>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          color="deep-purple lighten-2"
+          text
+          @click="reserve"
+        >
+          Reportar
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+    <br>
+    </div>
+  </div>
+  <div  v-show="showInfo">
+    <v-card
+    class="mx-auto pa-2"
+    max-width="1000"
+  >
+    <v-card-title>
+      <span class="text-h6 font-weight-light" style="color:#3CA3FF" >Informacion General:</span>
+    </v-card-title>
+
+    <v-list-item-title class="text-h6">
+      <v-row align="start">
+        <v-col class="text-left">
+          Nombre: {{name}}
+        </v-col>
+        <v-col class="text-left">
+          Pais: {{country}}
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col class="text-left">
+          Razon Social: {{reason}}
+        </v-col>
+        <v-col class="text-left">
+          Tamaño: {{size}}
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col class="text-left">
+          Sitio Web: {{siteWeb}}
+        </v-col>
+        <v-col class="text-left">
+         Telefono: {{phone}}
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col class="text-left">
+          email: {{email}}
+        </v-col>
+      </v-row>
+    </v-list-item-title>
+
+    <v-card-title>
+      <span class="text-h6 font-weight-light"  style="color:#3CA3FF">Direccion:</span>
+    </v-card-title>
+   
+     <v-list-item-title class="text-h6">
+      <v-row align="start">
+        <v-col class="text-left">
+          Latitud: {{latitude}}
+        </v-col>
+        <v-col class="text-left">
+          Longitud: {{longitude}}
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col class="text-left">
+          Suburbio: {{suburb}}
+        </v-col>
+        <v-col class="text-left">
+          Calle: {{street}}
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col class="text-left">
+          Localizacion: {{location}}
+        </v-col>
+        <v-col class="text-left">
+         Numero exterior: {{exteriorNumber}}
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col class="text-left">
+          Numero interior: {{interiorNumber}}
+        </v-col>
+        <v-col class="text-left">
+          Codigo postal: {{zipCode}}
+        </v-col>
+      </v-row>
+    </v-list-item-title>
+    
   </v-card>
   <br>
   </div>
@@ -124,14 +209,27 @@
 
 <script>
   export default {
-    
-   name:"Pedidos",
+   name:"Resena",
       data(){
         return{
-            nombre: "",
-            razon:"",
+            name: "",
+            reason:"",
             resenas: [],
-            imgUrl: ""
+            imgUrl: "",
+            size: "",
+            country:"",
+            siteWeb:"",
+            email: "",
+            latitude:"",
+            longitude:"",
+            street:"",
+            location:"",
+            exteriorNumber:"",
+            interiorNumber:"",
+            suburb:"",
+            zipCode:"",
+            showInfo: true,
+            showReview:false,
           }
         },
         async created(){
@@ -146,24 +244,41 @@
 
             this.$http.get("http://localhost:7000/api/company/"+idCompany)
             .then((result) => {
-              this.nombre = result.body.companyName
-              this.razon= result.body.socialReason
+              this.name = result.body.companyName
+              this.reason= result.body.socialReason
               this.imgUrl = result.body.companyLogo
+              this.size =  result.body.companySize
+              this.country = result.body.country
+              this.siteWeb = result.body.webPageUrl
+              this.phone = result.body.phoneNumber
+              this.email = result.body.email
+              this.latitude = result.body.latitude
+              this.longitude = result.body.longitude
+              this.street = result.body.street,
+              this.location = result.body.location,
+              this.exteriorNumber = result.body.exteriorNumber,
+              this.interiorNumber = result.body.interiorNumber,
+              this.suburb = result.body.suburb,
+              this.zipCode = result.body.zipCode 
              })
             .catch((error) => {
               
             });
-
-        
-         
         },
     methods: {
       goToCreate(){
         let history = "/create/" + this.$route.params.id
         this.$router.push(history);
+      },
+      goToReviews(){
+        this.showInfo =false;
+        this.showReview = true;
+      },
+      goToInfo(){
+        this.showReview =false;
+        this.showInfo = true;
       }
     }
-
   }
 </script>
 
