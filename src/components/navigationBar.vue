@@ -48,7 +48,7 @@
       company:""
     }),
     async created (){
-      this.$http.get("http://localhost:7000/api/company")
+      this.$http.get("company")
             .then((result) => {
               this.items = result.body
              })
@@ -58,7 +58,7 @@
     },
     watch: {
       company(val){
-        let url = "/review/"+val
+        let url = "/company/"+val
         this.$router.push(url);
         location.reload();
       }

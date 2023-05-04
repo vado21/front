@@ -52,6 +52,14 @@
       + Cuentanos tu experiencia
     </v-btn>
     </div>
+    <div v-show="showNoReview">
+        <v-card
+        class="mx-auto pa-2"
+        max-width="1000"
+      >
+      No hay reseñas
+      </v-card>
+    </div>
     <div v-show="showReview">
     <div style="padding:20px" v-for="resena in resenas" v-bind:key="resena.title">
 
@@ -116,10 +124,51 @@
           Reportar
         </v-btn>
       </v-card-actions>
+      <div class="pa-4">
+      
+    <v-container>
+      <v-row>
+        <v-col cols="12">
+          <v-text-field
+            v-model="resena.properComment"
+            outlined
+            clearable
+            label="Hacer comentario"
+            type="text"
+            background-color="white"
+            ref="comment"
+          >
+            <template v-slot:append-outer>
+              <v-menu
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    depressed
+                    color="primary"
+                    @click="comment(resena.properComment,resena.id,resena);"
+                  >
+                    Publicar
+                  </v-btn>
+                </template>
+              </v-menu>
+            </template>
+          </v-text-field>
+        </v-col>
+      </v-row>
+    </v-container>
+    <h3  align="start">Comentarios</h3>
+    <v-list-item  v-for="comment in resena.comments" v-bind:key="comment.id">
+      <v-list-item-content align="start">
+        <v-list-item-title>{{comment.body}}</v-list-item-title>
+        <v-list-item-subtitle>{{comment.createdAt}}</v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
+      </div>
     </v-card>
     <br>
     </div>
   </div>
+  
   <div  v-show="showInfo">
     <v-card
     class="mx-auto pa-2"
@@ -229,19 +278,21 @@
             zipCode:"",
             showInfo: true,
             showReview:false,
+            showNoReview:false,
           }
         },
         async created(){
           let idCompany = this.$route.params.id
-           this.$http.get("http://localhost:7000/api/review/company/"+idCompany)
+           this.$http.get("review/company/"+idCompany)
             .then((result) => {
               this.resenas = result.body
+              this.getAllComments();
              })
             .catch((error) => {
               
             });
 
-            this.$http.get("http://localhost:7000/api/company/"+idCompany)
+            this.$http.get("company/"+idCompany)
             .then((result) => {
               this.name = result.body.companyName
               this.reason= result.body.socialReason
@@ -271,12 +322,55 @@
       },
       goToReviews(){
         this.showInfo =false;
-        this.showReview = true;
+        if(this.resenas.length === 0){
+              this.showReview = false;
+              this.showNoReview = true
+        }
+        else{
+          this.showNoReview = false;
+          this.showReview = true;
+              
+        }
+        
       },
       goToInfo(){
+        this.showNoReview = false;
         this.showReview =false;
         this.showInfo = true;
+      },
+      getAllComments(){
+        
+        this.resenas.forEach((unique) => {
+            this.$http.get("comment/review-comment/"+unique.id)
+            .then((result) => {
+              unique.properComment = ""
+              unique.comments= result.body
+             })
+            .catch((error) => {
+              console.log(error)
+            });
+        });
+
+        
+      },
+      comment(message,reviewId,resena){
+          
+          let body = {
+                      body: message ,
+                      likeCount: 0,
+                      dislikeCount: 0,
+                      reportCount: 0,
+                      reviewId: reviewId
+                  }
+          this.$http.post("comment/",body)
+              .then((result) => {
+
+              })
+              .catch((error) => {
+                console.log(error)
+              });
       }
+
     }
   }
 </script>
