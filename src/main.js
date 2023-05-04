@@ -5,11 +5,13 @@ import vuetify from './plugins/vuetify'
 import router from './router'
 import VueResource from 'vue-resource'
 
+
 Vue.use(VueResource)
-const url = 'http://localhost:4000';
+Vue.config.productionTip = false;
+const url = 'https://telltell-api-v0.herokuapp.com/api';
 Vue.http.options.root = url;
 Vue.prototype.$urls = url;
-Vue.config.productionTip = false
+
 
 new Vue({
   store,

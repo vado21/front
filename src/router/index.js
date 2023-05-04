@@ -13,7 +13,7 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/review/:id',
+    path: '/company/:id',
     name: 'review',
     component: AboutView,
     params:true

@@ -124,7 +124,7 @@
         async created(){
           
             let idCompany = this.$route.params.id
-            this.$http.get("http://localhost:7000/api/company/"+idCompany)
+            this.$http.get("company/"+idCompany)
             .then((result) => {
               this.name = result.body.companyName
               this.imgUrl = result.body.companyLogo
@@ -150,9 +150,9 @@
                         reviewerOccupation: this.occupation,
                         companyId: parseInt(idCompany)
                     };
-          this.$http.post("http://localhost:7000/api/review",body)
+          this.$http.post("review",body)
           .then((result) => {
-            let history = "/review/" + idCompany
+            let history = "/company/" + idCompany
             this.$router.push(history);
           })
           .catch((error) => {
