@@ -322,7 +322,7 @@
       },
       goToReviews(){
         this.showInfo =false;
-        if(this.resenas.length == 0){
+        if(this.resenas.length === 0){
               this.showReview = false;
               this.showNoReview = true
         }
