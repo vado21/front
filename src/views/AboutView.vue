@@ -130,13 +130,11 @@
       <v-row>
         <v-col cols="12">
           <v-text-field
-            v-model="resena.properComment"
+            v-model="comments[resena.index]"
             outlined
-            clearable
             label="Hacer comentario"
             type="text"
             background-color="white"
-            ref="comment"
           >
             <template v-slot:append-outer>
               <v-menu
@@ -145,7 +143,8 @@
                   <v-btn
                     depressed
                     color="primary"
-                    @click="comment(resena.properComment,resena.id,resena);"
+                    click:clear
+                    @click="comment(comments[resena.index],resena.id,resena.index);"
                   >
                     Publicar
                   </v-btn>
@@ -263,6 +262,7 @@
             name: "",
             reason:"",
             resenas: [],
+            comments:[],
             imgUrl: "",
             size: "",
             country:"",
@@ -339,36 +339,50 @@
         this.showInfo = true;
       },
       getAllComments(){
-        
+        let index = 0
         this.resenas.forEach((unique) => {
             this.$http.get("comment/review-comment/"+unique.id)
             .then((result) => {
-              unique.properComment = ""
+              this.comments.push("")
               unique.comments= result.body
+              unique.index = index;
+              index++;
              })
             .catch((error) => {
               console.log(error)
             });
         });
-
-        
       },
-      comment(message,reviewId,resena){
-          
-          let body = {
-                      body: message ,
-                      likeCount: 0,
-                      dislikeCount: 0,
-                      reportCount: 0,
-                      reviewId: reviewId
-                  }
-          this.$http.post("comment/",body)
-              .then((result) => {
+      getCommentsByOne(reviewId,index){
+            this.$http.get("comment/review-comment/"+reviewId)
+            .then((result) => {
+              const newList = result.body
+              const jsonObj = this.resenas[index]
+              jsonObj.comments = newList
+              this.$set(this.resenas,index,jsonObj)
+             })
+            .catch((error) => {
+              console.log(error)
+            });
+      },
+      comment(message,reviewId,index){
 
-              })
-              .catch((error) => {
-                console.log(error)
-              });
+        let body = {
+            body: message ,
+            likeCount: 0,
+            dislikeCount: 0,
+            reportCount: 0,
+            reviewId: reviewId
+        }
+        
+        this.$http.post("comment/",body)
+          .then((result) => {
+            this.$set(this.comments,index,"")
+            this.getCommentsByOne(reviewId,index)
+          })
+          .catch((error) => {
+            console.log(error)
+          });
       }
 
     }
