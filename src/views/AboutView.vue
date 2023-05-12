@@ -105,15 +105,14 @@
       </v-list-item>
     <v-card-text>
         <v-chip-group
-          v-model="selection"
           active-class="blue accent-4 white--text"
           column
         >
-          <v-chip>Me gusta</v-chip>
+          
+          <v-chip  @click="like(resena.id,resena.index)"> {{resena.likeCount}} Me gusta</v-chip>
 
-          <v-chip>No me gusta</v-chip>
+          <v-chip  @click="dislike(resena.id,resena.index)">{{resena.dislikeCount}} No me gusta</v-chip>
 
-          <v-chip>Compartir</v-chip>
         </v-chip-group>
       </v-card-text>
       <v-card-actions>
@@ -263,6 +262,7 @@
             reason:"",
             resenas: [],
             comments:[],
+            currentLikes:[],
             imgUrl: "",
             size: "",
             country:"",
@@ -328,15 +328,88 @@
         }
         else{
           this.showNoReview = false;
-          this.showReview = true;
-              
+          this.showReview = true;  
         }
-        
       },
       goToInfo(){
         this.showNoReview = false;
         this.showReview =false;
         this.showInfo = true;
+      },
+      callApiLike(idReview,index,type,currentL){
+        const jsonBody ={
+          id:idReview,
+          type:type
+        }
+        this.$http.put("review/like/"+idReview,jsonBody)
+          .then((result) => {
+              this.currentLikes[index].current = currentL
+              const newList = result.body
+              const jsonObj = this.resenas[index]
+              jsonObj.likeCount = newList.likeCount
+              jsonObj.dislikeCount = newList.dislikeCount
+              this.$set(this.resenas,index,jsonObj)
+            })
+          .catch((error) => {
+            console.log(error)
+          });
+      },
+      callApiDislike(idReview,index,type,currentL){
+        const jsonBody ={
+          id:idReview,
+          type:type
+        }
+        this.$http.put("review/dislike/"+idReview,jsonBody)
+          .then((result) => {
+              this.currentLikes[index].current = currentL
+              const newList = result.body
+              const jsonObj = this.resenas[index]
+              jsonObj.likeCount = newList.likeCount
+              jsonObj.dislikeCount = newList.dislikeCount
+              this.$set(this.resenas,index,jsonObj)
+            })
+          .catch((error) => {
+            console.log(error)
+          });
+      },
+      async like(idReview,index){
+        
+        if(this.currentLikes[index].current != "like"){
+          if(this.currentLikes[index].current == ""){
+            //Put like
+            this.callApiLike(idReview,index,"increment","like");
+          }
+          else if(this.currentLikes[index].current == "dislike"){
+            //Take out like
+            await this.callApiLike(idReview,index,"increment","like");
+            //Put dislike
+            await this.callApiDislike(idReview,index,"decrement","like");
+          }
+        }
+        else{
+          //takeout Like
+          this.callApiLike(idReview,index,"decrement","");
+        
+        }
+      },
+      async dislike(idReview,index){
+        if(this.currentLikes[index].current != "dislike"){
+          if(this.currentLikes[index].current == ""){
+            //Put dislike
+            this.callApiDislike(idReview,index,"increment","dislike");
+          }
+          else if(this.currentLikes[index].current == "like"){
+            //Take out dislike
+            await this.callApiDislike(idReview,index,"increment","dislike");
+            //Put like
+            await this.callApiLike(idReview,index,"decrement","dislike");
+          }
+        }
+        else{
+          //takeout dislike
+          this.callApiDislike(idReview,index,"decrement","");
+        }
+
       },
       getAllComments(){
         let index = 0
@@ -344,6 +417,7 @@
             this.$http.get("comment/review-comment/"+unique.id)
             .then((result) => {
               this.comments.push("")
+              this.currentLikes.push({current:"",index: index})
               unique.comments= result.body
               unique.index = index;
               index++;
