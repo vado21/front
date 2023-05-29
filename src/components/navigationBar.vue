@@ -8,6 +8,14 @@
       <router-link to="/">
         <v-toolbar-title>  <img src="../assets/tell.png" > </v-toolbar-title>
       </router-link>
+
+      <v-btn
+      class="ma-2"
+      color="info"
+      @click="goToLiked()"
+    >
+    Mas populares
+    </v-btn>
       <v-spacer></v-spacer>
       <div class="area">
       <v-autocomplete
@@ -61,6 +69,12 @@
         let url = "/company/"+val
         this.$router.push(url);
         location.reload();
+      }
+    },
+    methods: {
+      goToLiked(){
+        let url= "/mostLiked"
+        this.$router.push(url);
       }
     }
   }
