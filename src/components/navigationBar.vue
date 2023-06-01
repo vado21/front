@@ -9,16 +9,14 @@
         <v-toolbar-title>  <img src="../assets/tell.png" > </v-toolbar-title>
       </router-link>
 
-      <v-btn
-      class="ma-2"
-      color="info"
-      @click="goToLiked()"
-    >
-    Mas populares
-    </v-btn>
+      
+    <v-tabs align-with-title>
+          <v-tab @click="goToLiked()">Mas populares</v-tab>
+        </v-tabs>
       <v-spacer></v-spacer>
       <div class="area">
       <v-autocomplete
+        type="text"
         v-model="company"
         :items="items"
         item-text="companyName"
@@ -53,29 +51,32 @@
       isLoading: false,
       search: null,
       items: [],
-      company:""
+      company:"",
+      search:null
     }),
-    async created (){
-      this.$http.get("company")
-            .then((result) => {
-              this.items = result.body
-             })
-            .catch((error) => {
-              
-            });
-    },
     watch: {
       company(val){
         let url = "/company/"+val
         this.$router.push(url);
         location.reload();
-      }
+      },
+      search (val) {
+        this.$http.get("company/search-company/autocomplete?companyName="+val)
+            .then((result) => {
+              this.items = []
+              this.items = result.body
+             })
+            .catch((error) => {
+              
+            });
+      },
+
     },
     methods: {
       goToLiked(){
         let url= "/mostLiked"
         this.$router.push(url);
-      }
+      },
     }
   }
 </script>
