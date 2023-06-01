@@ -4,7 +4,7 @@
     <br>
     <br>
     <div>
-        <img :src="imgUrl" width="150" height="100" >
+        <img v-bind:src="imgUrl" width="150" height="100" >
       
         <div class="">
         <p style="font-size:30px; font:Inter">{{name}}</p>
@@ -310,6 +310,9 @@
               this.interiorNumber = result.body.interiorNumber,
               this.suburb = result.body.suburb,
               this.zipCode = result.body.zipCode 
+                if(this.imgUrl == null){
+                  this.imgUrl = require('../assets/descarga.png');
+                }
              })
             .catch((error) => {
               console.log(error)
